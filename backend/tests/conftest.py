@@ -8,7 +8,7 @@ import psycopg
 import pytest
 from psycopg.rows import dict_row
 
-ROOT = Path(__file__).resolve().parent.parent
+ROOT = Path(__file__).resolve().parents[2]
 TEST_URL = os.environ.get(
     "TEST_DATABASE_URL", "postgresql://ledger:ledger@localhost:5433/ledger_test"
 )

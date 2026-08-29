@@ -7,8 +7,9 @@ doesn't.
 ## Stack (fixed)
 
 Postgres 16 in Docker, `db/schema.sql` and `db/seed.sql` as plain SQL,
-psycopg (v3) behind repository classes, FastAPI, pytest, uv. No ORM, no
-extra services.
+psycopg (v3) behind repository classes, FastAPI, pytest, uv, all under
+`backend/`. Next.js and Tailwind under `frontend/`, types generated from the
+API's `openapi.json`, never hand-written. No ORM, no extra services.
 
 ## Layers
 

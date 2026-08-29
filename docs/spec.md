@@ -54,20 +54,24 @@ implementations sit against Postgres, and FastAPI routers map HTTP to services.
 Folder shape:
 
 ```
-app/
-  domain/         entities, value objects, CheckInAssembler, repository interfaces
-  services/       ActionService, CheckInService, opener_prompt.md
-  infrastructure/ postgres repositories, db connection
-  api/            FastAPI app and routers
+backend/
+  app/
+    domain/         entities, value objects, CheckInAssembler, repository interfaces
+    services/       ActionService, CheckInService, opener_prompt.md
+    infrastructure/ postgres repositories, db connection
+    api/            FastAPI app and routers
+  tests/
+    conftest.py                   test database, seed, TestClient
+    domain/test_invariants.py     the three aggregate rules, no DB
+    domain/test_check_in.py       the assembler, from the example response below
+    infrastructure/test_schema.py the constraints that back the invariants
+    api/test_endpoints.py         one per endpoint, check-in asserts the example
+  pyproject.toml, uv.lock
+frontend/         Next.js + Tailwind. The screens, specified below once decided.
 db/
   schema.sql      the schema, readable like the Supabase SQL editor
   seed.sql        one Circle, eight members, three past meetings, one next
-tests/
-  conftest.py                 test database, seed, TestClient
-  domain/test_invariants.py   the three aggregate rules, no DB
-  domain/test_check_in.py     the assembler, from the example response below
-  infrastructure/test_schema.py  the constraints that back the invariants
-  api/test_endpoints.py       one per endpoint, check-in asserts the example
+docker-compose.yml
 docs/
   spec.md design.md schema.md process.md
 ```
@@ -216,10 +220,10 @@ moderator set. Enough that the check-in response is interesting on first run.
 ## Setup (README target)
 
 ```
-docker compose up -d        # Postgres 16, applies db/schema.sql and db/seed.sql
-uv sync                     # or pip install -e .
-uv run uvicorn app.api.main:app --reload
-uv run pytest
+docker compose up -d                          # Postgres 16, applies db/schema.sql and db/seed.sql
+cd backend && uv sync && uv run pytest        # 16+ tests against a throwaway ledger_test database
+uv run uvicorn app.api.main:app --reload      # API on :8000
+cd ../frontend && npm install && npm run dev  # screens on :3000
 ```
 
 Then `GET http://localhost:8000/circles/{seed_circle_id}/meetings/next/check-in`
