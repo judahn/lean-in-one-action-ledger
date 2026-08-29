@@ -55,14 +55,16 @@ export default async function MyActionsPage({
               For {meetingDay(next.held_at)}
             </h3>
             {forNext ? (
-              <div className="mt-3 rounded-lg bg-tint-green p-4">
+              <div className="mt-3 rounded-lg border border-warm-300 p-4">
+                <div className="type-caption text-warm-500">
+                  Committed for {meetingDay(next.held_at, "short")}. Report on
+                  it whenever it lands.
+                </div>
                 <p className="type-body font-semibold">{forNext.text}</p>
                 {forNext.why && (
                   <p className="type-body text-warm-500">{forNext.why}</p>
                 )}
-                <p className="type-caption mt-2 text-emerald">
-                  Recorded. You&apos;ll report on it after the meeting.
-                </p>
+                <ReportForm action={forNext} />
               </div>
             ) : (
               <RecordForm circleId={circleId} meetingId={next.id} />
