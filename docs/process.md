@@ -57,15 +57,32 @@ builds on the same schema and is in `design.md` as what I'd do next.
 - Modules split at about 200 lines, by responsibility.
 - uv for the environment, my first project on it. Two commands for the
   reviewer, and I wanted the practice.
+- The Update lists this meeting's actions alphabetically, with grouping by
+  status as a switch on the page. I had first specified "done first." That
+  was the tool ranking people, and I took it out.
+- Counts first, the rate small, and no rate at all when nothing was
+  committed. A Circle is not a scoreboard.
+- An action recorded for the upcoming meeting is reportable right away and
+  shows in your own rail, with a line on when it reads out. The wall reads
+  the previous meeting's commitments only.
+- The screens use Connect's own tokens, read from a saved page of the
+  platform: palette, type scale, radii, motion. They're built as a tab inside
+  a Circle, with Connect's chrome as a static frame.
 
 ## Where AI was used
 
 Everything in `backend/`, `frontend/`, and `db/` was generated with Claude
 Code (Claude Fable 5) from `docs/spec.md`, then read, run, and edited by me.
-The front-end mirrors Connect's own design tokens, pulled from a saved page
-of the platform. The
-research reading above was Claude Code fetching pages and articles into
-notes. The prose in `docs/` is mine.
+The research reading above was Claude Code fetching pages and articles into
+notes. The design tokens came from Claude Code reading Connect's stylesheet
+out of a page I saved while signed in. The prose in `docs/` is mine.
+
+## Time
+
+The spec and the backend fit the 2 to 3 hour box. The screens were an
+afternoon on top, because the round-one note asked for a couple of screens
+that look great and actually function, and the document asked for a backend.
+I built both.
 
 ## Tools
 
