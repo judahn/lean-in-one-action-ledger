@@ -1,5 +1,6 @@
 import { Bell, Menu, Search, Sparkles } from "lucide-react";
 import type { Member } from "@/lib/member";
+import { Logo } from "./Logo";
 import { MemberSwitcher } from "./MemberSwitcher";
 
 /** Connect's bar. On a phone it collapses the way Connect's does: hamburger, wordmark, icons. */
@@ -9,9 +10,7 @@ export function TopBar({ member }: { member: Member }) {
       <span className="flex size-8 shrink-0 items-center justify-center lg:hidden">
         <Menu className="size-5" strokeWidth={1.75} />
       </span>
-      <div className="shrink-0 text-[13px] font-bold tracking-[0.14em] text-warm-900 sm:text-[15px] sm:tracking-[0.2em]">
-        LEAN <span className="border-b-2 border-burgundy pb-px">IN</span> CONNECT
-      </div>
+      <Logo className="h-[15px] w-auto shrink-0 text-warm-900 sm:h-[18px]" />
       <div className="surface relative hidden h-9 w-full max-w-[460px] items-center rounded-full pr-3 pl-[38px] text-warm-500 md:flex">
         <Search className="absolute left-3 size-4" />
         <span className="type-body flex-1 truncate">Search topics, members, guides, Circles and more</span>
