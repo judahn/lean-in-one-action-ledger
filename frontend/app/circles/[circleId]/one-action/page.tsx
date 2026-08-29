@@ -58,7 +58,7 @@ export default async function OneActionUpdatePage({
         </section>
       </div>
 
-      <aside className="flex flex-col gap-6 xl:pt-3">
+      <aside className="flex flex-col gap-6 xl:pt-6">
         <section className="surface p-6">
           <h3 className="type-overline text-burgundy">Your One Action</h3>
           {upcoming && (
@@ -73,7 +73,7 @@ export default async function OneActionUpdatePage({
                 <StatusPill status={upcoming.status} />
                 <Link
                   href={`${base}/mine`}
-                  className="type-label text-burgundy"
+                  className="type-label motion-fast text-burgundy hover:text-burgundy-hover"
                 >
                   Update it →
                 </Link>
@@ -95,7 +95,7 @@ export default async function OneActionUpdatePage({
                 <StatusPill status={mine.status} />
                 <Link
                   href={`${base}/mine`}
-                  className="type-label text-burgundy"
+                  className="type-label motion-fast text-burgundy hover:text-burgundy-hover"
                 >
                   Update it →
                 </Link>
@@ -108,7 +108,7 @@ export default async function OneActionUpdatePage({
               </p>
               <Link
                 href={`${base}/mine`}
-                className="type-label mt-3 inline-block text-burgundy"
+                className="type-label motion-fast mt-3 inline-block text-burgundy hover:text-burgundy-hover"
               >
                 Record your One Action →
               </Link>
@@ -136,7 +136,7 @@ export default async function OneActionUpdatePage({
               </li>
             ))}
           </ul>
-          <span className="type-label-sm mt-4 flex h-7 items-center justify-center gap-2 rounded-full bg-warm-300">
+          <span className="type-label-sm motion-fast mt-4 flex h-7 cursor-pointer items-center justify-center gap-2 rounded-full bg-warm-300 hover:bg-warm-400/70">
             <MessageCircle className="size-4" strokeWidth={1.75} /> Start group
             chat
           </span>

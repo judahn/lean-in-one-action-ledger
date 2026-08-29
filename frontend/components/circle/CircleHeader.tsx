@@ -48,13 +48,14 @@ export function CircleHeader({
             )}
           </div>
           <div className="flex items-center justify-center gap-3 sm:justify-end">
-            <span className="hidden size-9 items-center justify-center rounded-full border border-warm-300 sm:flex">
+            <span className="motion-fast hidden size-9 cursor-pointer items-center justify-center rounded-full border border-warm-300 hover:bg-warm-200 sm:flex">
               <Pin className="size-4" strokeWidth={1.75} />
             </span>
-            <span className="type-label flex h-9 items-center gap-2 px-3 whitespace-nowrap sm:px-4">
-              <Sparkles className="size-4" strokeWidth={1.75} /> Circle Leader tips
+            <span className="type-label motion-fast flex h-9 cursor-pointer items-center gap-2 rounded-full px-3 whitespace-nowrap hover:bg-warm-200 sm:px-4">
+              <Sparkles className="size-4" strokeWidth={1.75} /> Circle Leader
+              tips
             </span>
-            <span className="type-label flex h-9 items-center gap-2 rounded-full bg-burgundy px-4 whitespace-nowrap text-warm-100">
+            <span className="btn btn-primary">
               <Settings className="size-4" /> Manage
             </span>
           </div>

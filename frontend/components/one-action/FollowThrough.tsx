@@ -8,7 +8,10 @@ export function FollowThrough({ ft }: { ft: CheckIn["follow_through"] }) {
     { label: "Not yet", n: ft.not_yet, dot: "bg-burgundy" },
     { label: "Not reported", n: ft.open, dot: "bg-warm-400" },
   ];
-  const span = ft.window_meetings === 1 ? "the last meeting" : `the last ${ft.window_meetings} meetings`;
+  const span =
+    ft.window_meetings === 1
+      ? "the last meeting"
+      : `the last ${ft.window_meetings} meetings`;
   return (
     <div className="flex flex-wrap items-end gap-x-6 gap-y-3 rounded-md bg-warm-200 px-5 py-4">
       {tiles.map((t) => (
@@ -23,7 +26,10 @@ export function FollowThrough({ ft }: { ft: CheckIn["follow_through"] }) {
         {ft.committed} actions over {span}
         {ft.rate !== null && (
           <div className="mt-0.5">
-            <span className="font-semibold text-warm-900">{Math.round(ft.rate * 100)}%</span> follow-through
+            <span className="font-semibold text-warm-900">
+              {Math.round(ft.rate * 100)}%
+            </span>{" "}
+            follow-through
           </div>
         )}
       </div>

@@ -13,7 +13,10 @@ export async function switchMember(formData: FormData) {
   revalidatePath("/", "layout");
 }
 
-export async function recordAction(_: FormState, formData: FormData): Promise<FormState> {
+export async function recordAction(
+  _: FormState,
+  formData: FormData,
+): Promise<FormState> {
   const member = await currentMember();
   const circleId = String(formData.get("circle_id"));
   const meetingId = String(formData.get("meeting_id"));
@@ -26,13 +29,18 @@ export async function recordAction(_: FormState, formData: FormData): Promise<Fo
       body: JSON.stringify({ text, why }),
     });
   } catch (e) {
-    return { error: e instanceof ApiError ? e.message : "Something went wrong." };
+    return {
+      error: e instanceof ApiError ? e.message : "Something went wrong.",
+    };
   }
   revalidatePath("/", "layout");
   return { ok: true };
 }
 
-export async function reportAction(_: FormState, formData: FormData): Promise<FormState> {
+export async function reportAction(
+  _: FormState,
+  formData: FormData,
+): Promise<FormState> {
   const member = await currentMember();
   const actionId = String(formData.get("action_id"));
   const status = String(formData.get("status"));
@@ -43,7 +51,9 @@ export async function reportAction(_: FormState, formData: FormData): Promise<Fo
       body: JSON.stringify({ status, note }),
     });
   } catch (e) {
-    return { error: e instanceof ApiError ? e.message : "Something went wrong." };
+    return {
+      error: e instanceof ApiError ? e.message : "Something went wrong.",
+    };
   }
   revalidatePath("/", "layout");
   return { ok: true };

@@ -9,6 +9,7 @@
   --color-navy: oklch(0.36 0.12 320);
   --color-orange: oklch(0.72 0.18 32);
   --color-red: oklch(0.51 0.18 22);
+  --color-burgundy-hover: #832421;
 
   --color-warm-50: oklch(1 0 0);
   --color-warm-100: oklch(0.98 0.005 60);
@@ -24,7 +25,8 @@
   --color-tint-yellow: #faf3d8;
   --color-tint-green: #e8f5ee;
 
-  --font-sans: "Avenir Next", var(--font-figtree), "Helvetica Neue", Arial, sans-serif;
+  --font-sans:
+    "Avenir Next", var(--font-figtree), "Helvetica Neue", Arial, sans-serif;
   --font-serif: var(--font-newsreader), "Newsreader", Georgia, serif;
 
   --radius-sm: 4px;
@@ -44,17 +46,91 @@ body {
 }
 
 /* Connect's type scale, by name. Sizes come from their --type-* tokens. */
-@utility type-body { font: 500 0.9375rem/1.5 var(--font-sans); }
-@utility type-body-lg { font: 500 1rem/1.5 var(--font-sans); }
-@utility type-caption { font: 500 0.75rem/1.4 var(--font-sans); }
-@utility type-label { font: 600 0.875rem/1.4 var(--font-sans); }
-@utility type-label-sm { font: 600 0.75rem/1.4 var(--font-sans); }
-@utility type-overline { font: 600 0.875rem/1.4 var(--font-sans); letter-spacing: 0.04em; text-transform: uppercase; }
-@utility type-input { font: 500 1rem/1.5 var(--font-sans); }
-@utility type-title { font: 400 1.5rem/1.25 var(--font-serif); font-optical-sizing: auto; }
-@utility type-title-lg { font: 400 2rem/1.15 var(--font-serif); font-optical-sizing: auto; }
-@utility type-title-sm { font: 500 1.125rem/1.3 var(--font-serif); font-optical-sizing: auto; }
-@utility type-numeric { font: 700 1.5rem/1.1 var(--font-sans); }
+@utility type-body {
+  font: 500 0.9375rem/1.5 var(--font-sans);
+}
+@utility type-body-lg {
+  font: 500 1rem/1.5 var(--font-sans);
+}
+@utility type-caption {
+  font: 500 0.75rem/1.4 var(--font-sans);
+}
+@utility type-label {
+  font: 600 0.875rem/1.4 var(--font-sans);
+}
+@utility type-label-sm {
+  font: 600 0.75rem/1.4 var(--font-sans);
+}
+@utility type-overline {
+  font: 600 0.875rem/1.4 var(--font-sans);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+@utility type-input {
+  font: 500 1rem/1.5 var(--font-sans);
+}
+@utility type-title {
+  font: 400 1.5rem/1.25 var(--font-serif);
+  font-optical-sizing: auto;
+}
+@utility type-title-lg {
+  font: 400 2rem/1.15 var(--font-serif);
+  font-optical-sizing: auto;
+}
+@utility type-title-sm {
+  font: 500 1.125rem/1.3 var(--font-serif);
+  font-optical-sizing: auto;
+}
+@utility type-numeric {
+  font: 700 1.5rem/1.1 var(--font-sans);
+}
+
+/* Connect's motion: 120ms on the standard curve, colors only. */
+@utility motion-fast {
+  transition:
+    background-color 120ms var(--ease-standard),
+    color 120ms var(--ease-standard),
+    border-color 120ms var(--ease-standard);
+}
+
+/* Connect's button: 36px pill, label type, hairline transparent border, .005em tracking. */
+@utility btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  height: 2.25rem;
+  padding: 0 1rem;
+  border-radius: 9999px;
+  border: 1px solid transparent;
+  font: 600 0.875rem/1.4 var(--font-sans);
+  letter-spacing: 0.005em;
+  white-space: nowrap;
+  cursor: pointer;
+  transition:
+    background-color 120ms var(--ease-standard),
+    color 120ms var(--ease-standard);
+}
+@utility btn-primary {
+  background: var(--color-burgundy);
+  color: var(--color-warm-100);
+  &:hover:not(:disabled) {
+    background: var(--color-burgundy-hover);
+  }
+}
+@utility btn-dark {
+  background: var(--color-warm-900);
+  color: var(--color-warm-100);
+  &:hover:not(:disabled) {
+    background: color-mix(in oklab, var(--color-warm-900) 85%, white);
+  }
+}
+@utility btn-ghost {
+  background: transparent;
+  color: var(--color-warm-900);
+  &:hover {
+    background: var(--color-warm-200);
+  }
+}
 
 /* A Connect surface module: card, border at 43% of the border token, soft shadow. */
 @utility surface {

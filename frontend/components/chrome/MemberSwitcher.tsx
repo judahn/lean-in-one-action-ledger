@@ -10,7 +10,11 @@ import { SEED_MEMBERS } from "@/lib/seed";
 export function MemberSwitcher({ member }: { member: Member }) {
   const tone = toneFor(member.id);
   return (
-    <form action={switchMember} className="relative flex items-center gap-2 p-1" title="Switch member (demo)">
+    <form
+      action={switchMember}
+      className="relative flex items-center gap-2 p-1"
+      title="Switch member (demo)"
+    >
       <span
         className="flex size-9 items-center justify-center rounded-full font-serif text-[13px] font-semibold"
         style={{ background: tone.bg, color: tone.fg }}

@@ -5,13 +5,28 @@ import { reportAction, type FormState } from "@/app/actions";
 import type { Action, ActionStatus } from "@/lib/api/client";
 
 const CHOICES: { value: ActionStatus; label: string; on: string }[] = [
-  { value: "done", label: "Done", on: "border-emerald bg-tint-green text-emerald" },
-  { value: "partly", label: "Partly", on: "border-[#6c3a05] bg-tint-orange text-[#6c3a05]" },
-  { value: "not_yet", label: "Not yet", on: "border-burgundy bg-tint-poppy text-burgundy" },
+  {
+    value: "done",
+    label: "Done",
+    on: "border-emerald bg-tint-green text-emerald",
+  },
+  {
+    value: "partly",
+    label: "Partly",
+    on: "border-[#6c3a05] bg-tint-orange text-[#6c3a05]",
+  },
+  {
+    value: "not_yet",
+    label: "Not yet",
+    on: "border-burgundy bg-tint-poppy text-burgundy",
+  },
 ];
 
 export function ReportForm({ action }: { action: Action }) {
-  const [state, submit, pending] = useActionState<FormState, FormData>(reportAction, {});
+  const [state, submit, pending] = useActionState<FormState, FormData>(
+    reportAction,
+    {},
+  );
   const [status, setStatus] = useState<ActionStatus | null>(
     action.status === "committed" ? null : action.status,
   );
@@ -21,8 +36,10 @@ export function ReportForm({ action }: { action: Action }) {
         {CHOICES.map((c) => (
           <label
             key={c.value}
-            className={`type-label flex h-8 cursor-pointer items-center rounded-full border px-3 transition-colors ${
-              status === c.value ? c.on : "border-warm-300 text-warm-500 hover:bg-warm-200"
+            className={`type-label flex h-8 cursor-pointer items-center rounded-full border px-3 motion-fast ${
+              status === c.value
+                ? c.on
+                : "border-warm-300 text-warm-500 hover:bg-warm-200"
             }`}
           >
             <input
@@ -49,11 +66,13 @@ export function ReportForm({ action }: { action: Action }) {
         <button
           type="submit"
           disabled={pending || !status}
-          className="type-label h-9 rounded-full bg-warm-900 px-4 text-warm-100 transition-opacity disabled:opacity-40"
+          className="btn btn-dark disabled:opacity-40"
         >
           {pending ? "Saving…" : "Save"}
         </button>
-        {state.error && <span className="type-caption text-red">{state.error}</span>}
+        {state.error && (
+          <span className="type-caption text-red">{state.error}</span>
+        )}
       </div>
     </form>
   );

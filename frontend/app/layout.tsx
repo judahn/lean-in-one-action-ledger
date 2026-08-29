@@ -21,7 +21,10 @@ export const metadata: Metadata = {
 export default async function RootLayout({ children }: LayoutProps<"/">) {
   const member = await currentMember();
   return (
-    <html lang="en" className={`${newsreader.variable} ${figtree.variable} h-full`}>
+    <html
+      lang="en"
+      className={`${newsreader.variable} ${figtree.variable} h-full`}
+    >
       <body className="min-h-full">
         <TopBar member={member} />
         <div className="flex">

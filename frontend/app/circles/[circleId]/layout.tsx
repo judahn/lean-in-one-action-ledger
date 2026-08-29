@@ -3,7 +3,11 @@ import { CircleHeader } from "@/components/circle/CircleHeader";
 import { currentMember } from "@/lib/member";
 import { CIRCLE_LEADER_ID, SEED_MEMBERS } from "@/lib/seed";
 
-export default async function CircleLayout({ children }: { children: ReactNode }) {
+export default async function CircleLayout({
+  children,
+}: {
+  children: ReactNode;
+}) {
   const member = await currentMember();
   return (
     <div className="pb-12">
