@@ -109,3 +109,61 @@ def test_a_member_cannot_read_another_members_history(client):
     response = client.get(f"/members/{PRIYA}/actions", headers=as_member(LENA))
 
     assert response.status_code == 403
+
+
+# GET /circles/{circle_id}/meetings/next/check-in
+
+AS_OF = "2026-08-29T12:00:00Z"
+
+
+def test_the_check_in_has_the_example_shape(client):
+    response = client.get(
+        f"/circles/{CIRCLE}/meetings/next/check-in",
+        params={"as_of": AS_OF},
+        headers=as_member(PRIYA),
+    )
+
+    assert response.status_code == 200
+    body = response.json()
+    assert set(body) == {
+        "circle",
+        "next_meeting",
+        "since_meeting",
+        "actions",
+        "follow_through",
+        "opener",
+        "opener_source",
+    }
+    assert body["circle"]["name"] == "West Coast Execs"
+    assert body["next_meeting"]["moderator"]["display_name"] == "Dana"
+    assert body["since_meeting"]["id"] == str(MEETING_AUG)
+    assert set(body["actions"][0]) == {
+        "member",
+        "text",
+        "status",
+        "note",
+        "committed_at",
+        "carried_over",
+    }
+    carried = [a["member"]["display_name"] for a in body["actions"] if a["carried_over"]]
+    assert carried == ["Yuki", "Lena"]
+    assert body["follow_through"] == {
+        "window_meetings": 3,
+        "committed": 24,
+        "done": 15,
+        "partly": 4,
+        "not_yet": 3,
+        "open": 2,
+        "rate": 0.71,
+    }
+    assert body["opener_source"] == "template"
+
+
+def test_a_non_member_cannot_read_the_check_in(client):
+    response = client.get(
+        f"/circles/{CIRCLE}/meetings/next/check-in",
+        params={"as_of": AS_OF},
+        headers=as_member(uuid4()),
+    )
+
+    assert response.status_code == 403

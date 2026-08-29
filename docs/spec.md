@@ -130,7 +130,8 @@ A member's own history, newest first. Only that member (403 otherwise).
 Assembles the One Action Update for the moderator opening the next meeting.
 Any member of the Circle may read it (that mirrors the room: the update is
 read aloud). Query params: `window` (default 3) = how many past meetings the
-follow-through rate covers.
+follow-through rate covers. `as_of` (ISO datetime, default now) fixes the
+clock, so the demo and the tests don't depend on the wall clock.
 
 Example response:
 
@@ -141,20 +142,20 @@ Example response:
   "since_meeting": { "id": "…", "held_at": "2026-08-13T18:00:00-07:00" },
   "actions": [
     {
-      "member": { "id": "…", "display_name": "Priya" },
-      "text": "Ask Marcus for the Q4 launch to lead",
-      "status": "done",
-      "note": "Asked Tuesday. He said yes.",
-      "committed_at": { "meeting_id": "…", "held_at": "2026-08-13T18:00:00-07:00" },
-      "carried_over": false
-    },
-    {
       "member": { "id": "…", "display_name": "Lena" },
       "text": "Book the informational with the VP of Ops",
       "status": "committed",
       "note": null,
-      "committed_at": { "meeting_id": "…", "held_at": "2026-07-09T18:00:00-07:00" },
+      "committed_at": { "id": "…", "held_at": "2026-07-09T18:00:00-07:00" },
       "carried_over": true
+    },
+    {
+      "member": { "id": "…", "display_name": "Priya" },
+      "text": "Ask Marcus for the Q4 launch to lead",
+      "status": "done",
+      "note": "Asked Tuesday. He said yes.",
+      "committed_at": { "id": "…", "held_at": "2026-08-13T18:00:00-07:00" },
+      "carried_over": false
     }
   ],
   "follow_through": {
@@ -166,22 +167,29 @@ Example response:
     "open": 2,
     "rate": 0.71
   },
-  "opener": "Fifteen of twenty-four actions landed over the last three meetings. Two are carried over from July. Priya's is the one to celebrate first."
+  "opener": "15 of 24 actions landed over the last 3 meetings. 2 are carried over from earlier meetings.",
+  "opener_source": "template"
 }
 ```
 
-**Ordering rule:** carried-over actions (status `committed` or `not_yet` from
-meetings before `since_meeting`) come first, oldest first. Then this
-meeting's actions: `done` before `partly` before `not_yet` before
-`committed`. The moderator sees what needs attention at the top.
+**Ordering rule:** carried-over actions (status `committed` or `not_yet`,
+from meetings inside the window and before `since_meeting`) come first,
+oldest meeting first. Then this meeting's actions, alphabetically by
+member. Ties read alphabetically everywhere. The tool remembers, it
+doesn't rank: grouping by status is a switch on the page, the moderator's
+call, so the product stays out of the "wins first or go around the room"
+argument.
 
 **Follow-through rate:** `(done + 0.5 × partly) / committed_in_window`,
 rounded to two places. `partly` counts as half on purpose: the ritual
 rewards movement, not perfection. Documented, easy to change.
 
-**Opener:** a deterministic template by default. Behind `OPENER_AI=1`, the
-same facts go to Claude with a short prompt (`app/services/opener_prompt.md`)
-and the returned line replaces the template. The response includes
+**Opener:** a deterministic template by default that states the numbers
+and stops: "15 of 24 actions landed over the last 3 meetings. 2 are carried
+over from earlier meetings." Behind `OPENER_AI=1`, the same facts go to
+Claude with a short prompt (`app/services/opener_prompt.md`) and the
+returned line replaces the template. If Claude is unreachable or declines,
+the template stands. The response includes
 `"opener_source": "template" | "claude"`. This is the only place AI touches
 the product, and it's optional.
 

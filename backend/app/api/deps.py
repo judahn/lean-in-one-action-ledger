@@ -12,6 +12,8 @@ from app.infrastructure.postgres.actions import PostgresActionRepository
 from app.infrastructure.postgres.circles import PostgresCircleRepository
 from app.infrastructure.postgres.meetings import PostgresMeetingRepository
 from app.services.action_service import ActionService
+from app.services.check_in_service import CheckInService
+from app.services.opener import ClaudeOpener, ai_opener_enabled
 
 
 def connection() -> Iterator[psycopg.Connection]:
@@ -32,6 +34,15 @@ def action_service(conn: Annotated[psycopg.Connection, Depends(connection)]) -> 
     )
 
 
+def check_in_service(conn: Annotated[psycopg.Connection, Depends(connection)]) -> CheckInService:
+    return CheckInService(
+        circles=PostgresCircleRepository(conn),
+        meetings=PostgresMeetingRepository(conn),
+        opener=ClaudeOpener() if ai_opener_enabled() else None,
+    )
+
+
 Connection = Annotated[psycopg.Connection, Depends(connection)]
 AskingMember = Annotated[UUID, Depends(asking_member)]
 Actions = Annotated[ActionService, Depends(action_service)]
+CheckIns = Annotated[CheckInService, Depends(check_in_service)]
