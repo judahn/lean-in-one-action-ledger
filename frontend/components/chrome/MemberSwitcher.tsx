@@ -17,7 +17,7 @@ export function MemberSwitcher({ member }: { member: Member }) {
       >
         {member.name.slice(0, 2).toUpperCase()}
       </span>
-      <ChevronDown className="size-4 text-warm-500" />
+      <ChevronDown className="hidden size-4 text-warm-500 sm:block" />
       <select
         name="member_id"
         defaultValue={member.id}

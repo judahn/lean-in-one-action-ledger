@@ -32,7 +32,7 @@ export default async function OneActionUpdatePage({
   const base = `/circles/${circleId}/one-action`;
 
   return (
-    <div className="mx-8 grid grid-cols-1 gap-x-6 xl:grid-cols-[1fr_320px]">
+    <div className="mx-4 grid grid-cols-1 gap-x-6 sm:mx-8 xl:grid-cols-[1fr_320px]">
       <div className="flex flex-col gap-3">
         <CircleTabs circleId={circleId} />
         <section className="surface flex flex-col gap-4 p-6">
