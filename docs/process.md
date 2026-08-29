@@ -60,8 +60,10 @@ builds on the same schema and is in `design.md` as what I'd do next.
 
 ## Where AI was used
 
-Everything in `app/`, `db/`, and `tests/` was generated with Claude Code
-(Claude Fable 5) from `docs/spec.md`, then read, run, and edited by me. The
+Everything in `backend/`, `frontend/`, and `db/` was generated with Claude
+Code (Claude Fable 5) from `docs/spec.md`, then read, run, and edited by me.
+The front-end mirrors Connect's own design tokens, pulled from a saved page
+of the platform. The
 research reading above was Claude Code fetching pages and articles into
 notes. The prose in `docs/` is mine.
 
