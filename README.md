@@ -26,7 +26,7 @@ You need Docker Desktop, [uv](https://docs.astral.sh/uv/), and Node 20 or newer.
 docker compose up -d --wait                 # Postgres 16 on :5433, schema and seed applied
 cd backend && uv sync && uv run pytest      # 29 tests against a throwaway ledger_test database
 uv run uvicorn app.api.main:app --reload    # API on :8000, docs at /docs
-cd ../frontend && npm install && npm run dev  # screens on :3000
+cd ../frontend && npm ci && npm run dev       # screens on :3000
 ```
 
 Open http://localhost:3000. It lands on the Circle's One Action tab.
