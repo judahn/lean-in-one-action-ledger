@@ -22,7 +22,7 @@ export function FollowThrough({ ft }: { ft: CheckIn["follow_through"] }) {
           </div>
         </div>
       ))}
-      <div className="type-caption ml-auto text-right text-warm-500">
+      <div className="type-caption text-warm-500 sm:ml-auto sm:text-right">
         {ft.committed} actions over {span}
         {ft.rate !== null && (
           <div className="mt-0.5">

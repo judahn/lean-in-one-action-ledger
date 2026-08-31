@@ -47,7 +47,7 @@ export function CircleHeader({
               </span>
             )}
           </div>
-          <div className="flex items-center justify-center gap-3 sm:justify-end">
+          <div className="flex items-center justify-start gap-3 sm:justify-end">
             <span className="motion-fast hidden size-9 cursor-pointer items-center justify-center rounded-full border border-warm-300 hover:bg-warm-200 sm:flex">
               <Pin className="size-4" strokeWidth={1.75} />
             </span>
