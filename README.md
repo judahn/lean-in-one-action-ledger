@@ -68,6 +68,13 @@ Circle after poking at it:
 docker compose down -v && docker compose up -d --wait
 ```
 
+To see the empty states, before anyone has recorded an action, clear the
+actions and keep the Circle, members, and meetings:
+
+```
+docker compose exec db psql -U ledger -d ledger -c "truncate actions cascade"
+```
+
 ## Settings
 
 All optional. Defaults work for the local setup above.
