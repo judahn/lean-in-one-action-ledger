@@ -12,7 +12,9 @@ Today that commitment lives on a printed worksheet and the follow-through
 happens on email or a Facebook group. The ledger is the platform holding it:
 a member records her action, marks it done or not between meetings, and the
 moderator opens the next meeting with the One Action Update already
-assembled. No new ritual. Their ritual, made to work between meetings.
+assembled. The same page is where the meeting closes: the next round of
+commitments lands on it as the room says them out loud. No new ritual. Their
+ritual, made to work between meetings.
 
 ## Ubiquitous language (Lean In's own words, nothing renamed)
 
@@ -37,6 +39,12 @@ its `Actions`. Invariants the aggregate enforces, not the database alone:
 3. Status only moves forward from `committed` (to `done`, `partly`, or
    `not_yet`). A later update can revise among those three, never back to
    `committed`.
+4. A report freezes the wording. An action's text and why change only while
+   its status is `committed`, which by rule 3 means only before the first
+   report. What the Circle heard stays what the Circle heard.
+
+Rules 1 and 3 are backed by constraints in the schema. Rules 2 and 4 are
+enforced in the application only.
 
 **Entities:** Circle, Member, Meeting, Action.
 **Value objects:** `ActionStatus` (committed | done | partly | not_yet),
@@ -62,7 +70,7 @@ backend/
     api/            FastAPI app and routers
   tests/
     conftest.py                   test database, seed, TestClient
-    domain/test_invariants.py     the three aggregate rules, no DB
+    domain/test_invariants.py     the aggregate rules, no DB
     domain/test_check_in.py       the assembler, from the example response below
     infrastructure/test_schema.py the constraints that back the invariants
     api/test_endpoints.py         one per endpoint, check-in asserts the example
@@ -118,10 +126,17 @@ Member comes from `X-Member-Id`. 201 with the action. 409 if that member
 already has an action for that meeting (invariant 1). 403 if not a member.
 
 ### `PATCH /actions/{action_id}`
-Report on an action. Body: `{ "status": "done" | "partly" | "not_yet", "note": string | null }`.
-Only the action's own member may update it (403 otherwise). Appends an
-`action_update`, sets `actions.status`. 422 if status is `committed`
-(invariant 3).
+Report on an action, or reword it. The body carries one intent or the other.
+
+`{ "status": "done" | "partly" | "not_yet", "note": string | null }` reports.
+It appends an `action_update` and sets `actions.status`. 422 if status is
+`committed` (invariant 3).
+
+`{ "text": string, "why": string | null }` rewords, and only while the action
+is still `committed`. 422 once a report exists (invariant 4).
+
+Only the action's own member may do either (403 otherwise). A body carrying
+neither intent, or both, is 422.
 
 ### `GET /members/{member_id}/actions`
 A member's own history, newest first. Only that member (403 otherwise).
@@ -132,6 +147,14 @@ Any member of the Circle may read it (that mirrors the room: the update is
 read aloud). Query params: `window` (default 3) = how many past meetings the
 follow-through rate covers. `as_of` (ISO datetime, default now) fixes the
 clock, so the demo and the tests don't depend on the wall clock.
+
+The response carries two lists, in the order the meeting uses them. `actions`
+is what the room reports on: last meeting's commitments, plus anything still
+open from earlier. `upcoming` is what the room commits to before it leaves,
+the next meeting's actions, so the closing go-around lands on the page as it
+happens. An upcoming entry can already carry a status other than `committed`,
+because a member may report before the meeting. Entries in both lists have the
+same fields. `why` is a member's note to herself and stays on her own page.
 
 Example response:
 
@@ -158,6 +181,16 @@ Example response:
       "carried_over": false
     }
   ],
+  "upcoming": [
+    {
+      "member": { "id": "…", "display_name": "Grace" },
+      "text": "Put my name forward for the exec sponsor program",
+      "status": "committed",
+      "note": null,
+      "committed_at": { "id": "…", "held_at": "2026-09-10T18:00:00-07:00" },
+      "carried_over": false
+    }
+  ],
   "follow_through": {
     "window_meetings": 3,
     "committed": 24,
@@ -175,7 +208,8 @@ Example response:
 **Ordering rule:** carried-over actions (status `committed` or `not_yet`,
 from meetings inside the window and before `since_meeting`) come first,
 oldest meeting first. Then this meeting's actions, alphabetically by
-member. Ties read alphabetically everywhere. The tool remembers, it
+member. `upcoming` is alphabetical by member too. Ties read alphabetically
+everywhere. The tool remembers, it
 doesn't rank: grouping by status is a switch on the page, the moderator's
 call, so the product stays out of the "wins first or go around the room"
 argument.
@@ -198,10 +232,11 @@ the product, and it's optional.
 Test first, but not everything. The test is written before the code it
 protects, for the things a later change could silently break:
 
-- The three invariants, as unit tests on the aggregate with no database.
+- The invariants, as unit tests on the aggregate with no database.
 - `CheckInAssembler`, as unit tests built from the example response above:
-  ordering, carry-over, the rate, the template opener and `opener_source`.
-- The schema constraints that back the invariants, one integration test
+  ordering, carry-over, the upcoming group, the rate, the template opener
+  and `opener_source`.
+- The schema constraints that back rules 1 and 3, one integration test
   each, so the database still refuses what the aggregate refuses.
 - One test per endpoint. The check-in endpoint asserts the example shape.
 
@@ -223,7 +258,7 @@ protects and checks one behavior, so a failure reads as a sentence.
 One Circle ("West Coast Execs"), eight members, three past meetings (July,
 August, and one in June) with actions in a realistic mix of statuses, two
 carried-over actions, one scheduled next meeting in September with a
-moderator set. Enough that the check-in response is interesting on first run.
+moderator set and two actions already committed for it. Enough that the check-in response is interesting on first run.
 
 ## Setup (README target)
 

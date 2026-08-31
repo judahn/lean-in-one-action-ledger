@@ -34,8 +34,11 @@ export interface paths {
         delete?: never;
         options?: never;
         head?: never;
-        /** Report Action */
-        patch: operations["report_action_actions__action_id__patch"];
+        /**
+         * Update Action
+         * @description A status reports on the action. Text rewords it, until the first report.
+         */
+        patch: operations["update_action_actions__action_id__patch"];
         trace?: never;
     };
     "/members/{member_id}/actions": {
@@ -135,6 +138,8 @@ export interface components {
             since_meeting: components["schemas"]["MeetingRefOut"] | null;
             /** Actions */
             actions: components["schemas"]["CheckInActionOut"][];
+            /** Upcoming */
+            upcoming: components["schemas"]["CheckInActionOut"][];
             follow_through: components["schemas"]["FollowThroughOut"];
             /** Opener */
             opener: string;
@@ -217,11 +222,18 @@ export interface components {
             /** Why */
             why?: string | null;
         };
-        /** ReportActionRequest */
-        ReportActionRequest: {
-            status: components["schemas"]["ActionStatus"];
+        /**
+         * UpdateActionRequest
+         * @description One intent or the other: a status reports on the action, text rewords it.
+         */
+        UpdateActionRequest: {
+            status?: components["schemas"]["ActionStatus"] | null;
             /** Note */
             note?: string | null;
+            /** Text */
+            text?: string | null;
+            /** Why */
+            why?: string | null;
         };
         /** ValidationError */
         ValidationError: {
@@ -283,7 +295,7 @@ export interface operations {
             };
         };
     };
-    report_action_actions__action_id__patch: {
+    update_action_actions__action_id__patch: {
         parameters: {
             query?: never;
             header: {
@@ -296,7 +308,7 @@ export interface operations {
         };
         requestBody: {
             content: {
-                "application/json": components["schemas"]["ReportActionRequest"];
+                "application/json": components["schemas"]["UpdateActionRequest"];
             };
         };
         responses: {

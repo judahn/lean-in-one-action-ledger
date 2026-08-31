@@ -5,7 +5,7 @@ from uuid import UUID
 from fastapi import APIRouter
 
 from app.api.deps import Actions, AskingMember
-from app.api.schemas import ActionResponse, RecordActionRequest, ReportActionRequest
+from app.api.schemas import ActionResponse, RecordActionRequest, UpdateActionRequest
 
 router = APIRouter(tags=["actions"])
 
@@ -23,10 +23,14 @@ def record_action(
 
 
 @router.patch("/actions/{action_id}")
-def report_action(
-    action_id: UUID, body: ReportActionRequest, member: AskingMember, actions: Actions
+def update_action(
+    action_id: UUID, body: UpdateActionRequest, member: AskingMember, actions: Actions
 ) -> ActionResponse:
-    action = actions.report(action_id, member, body.status, body.note)
+    """A status reports on the action. Text rewords it, until the first report."""
+    if body.status is not None:
+        action = actions.report(action_id, member, body.status, body.note)
+    else:
+        action = actions.rewrite(action_id, member, body.text, body.why)
     return ActionResponse.from_domain(action)
 
 

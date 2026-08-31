@@ -19,3 +19,7 @@ class DuplicateAction(DomainError):
 
 class InvalidStatusTransition(DomainError):
     """Invariant 3: status never returns to committed."""
+
+
+class ActionAlreadyReported(DomainError):
+    """Invariant 4: a report freezes the wording."""

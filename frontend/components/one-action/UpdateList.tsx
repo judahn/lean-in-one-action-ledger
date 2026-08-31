@@ -14,28 +14,39 @@ const STATUS_ORDER: Record<ActionStatus, number> = {
   committed: 3,
 };
 
-/** The wall. Alphabetical by default. The status sort is the moderator's choice, not the tool's. */
+/** The wall, most actionable first: commit for the next meeting, then the
+ * last meeting's actions, then what is still open from earlier. One sort
+ * toggle governs every group. Alphabetical by default. The status sort is
+ * the moderator's choice, not the tool's. */
 export function UpdateList({
   actions,
   sinceHeldAt,
+  upcoming,
+  nextHeldAt,
+  record,
 }: {
   actions: CheckInAction[];
   sinceHeldAt: string | null;
+  upcoming: CheckInAction[];
+  nextHeldAt: string;
+  record?: React.ReactNode;
 }) {
   const [sort, setSort] = useState<Sort>("name");
-  const carried = actions.filter((a) => a.carried_over);
-  const thisMeeting = actions.filter((a) => !a.carried_over);
-  const ordered =
+  const arrange = (list: CheckInAction[]) =>
     sort === "status"
-      ? [...thisMeeting].sort(
+      ? [...list].sort(
           (a, b) => STATUS_ORDER[a.status] - STATUS_ORDER[b.status],
         )
-      : thisMeeting;
+      : [...list].sort((a, b) =>
+          a.member.display_name.localeCompare(b.member.display_name),
+        );
+  const carried = arrange(actions.filter((a) => a.carried_over));
+  const thisMeeting = arrange(actions.filter((a) => !a.carried_over));
+  const nextMeeting = arrange(upcoming);
 
   return (
     <div>
-      <div className="flex items-center justify-between">
-        <h3 className="type-overline text-burgundy">Latest actions</h3>
+      <div className="flex justify-end">
         <div className="type-label-sm flex items-center gap-0.5 rounded-full bg-warm-200 p-0.5">
           {(["name", "status"] as Sort[]).map((s) => (
             <button
@@ -54,6 +65,33 @@ export function UpdateList({
         </div>
       </div>
 
+      <div>
+        {record}
+        <h3
+          className={`type-overline text-burgundy${record ? " mt-6" : " mt-3"}`}
+        >
+          Committed for {meetingDay(nextHeldAt)}
+        </h3>
+        <ul className="mt-1 divide-y divide-warm-200">
+          {nextMeeting.map((a) => (
+            <Row key={a.member.id + a.committed_at.id} action={a} />
+          ))}
+        </ul>
+      </div>
+
+      <h3 className="type-overline mt-6 text-burgundy">Latest actions</h3>
+      {sinceHeldAt && (
+        <Group title={`From ${meetingDay(sinceHeldAt)}`}>
+          {thisMeeting.map((a) => (
+            <Row key={a.member.id + a.committed_at.id} action={a} />
+          ))}
+        </Group>
+      )}
+      {actions.length === 0 && (
+        <p className="type-body mt-4 text-warm-500">
+          No One Actions on the ledger yet.
+        </p>
+      )}
       {carried.length > 0 && (
         <Group title="Still open from earlier meetings">
           {carried.map((a) => (
@@ -64,18 +102,6 @@ export function UpdateList({
             />
           ))}
         </Group>
-      )}
-      {sinceHeldAt && (
-        <Group title={`From ${meetingDay(sinceHeldAt)}`}>
-          {ordered.map((a) => (
-            <Row key={a.member.id + a.committed_at.id} action={a} />
-          ))}
-        </Group>
-      )}
-      {actions.length === 0 && (
-        <p className="type-body mt-4 text-warm-500">
-          No One Actions on the ledger yet.
-        </p>
       )}
     </div>
   );

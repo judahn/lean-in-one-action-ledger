@@ -3,6 +3,7 @@ import { SubNav } from "@/components/circle/SubNav";
 import { RecordForm } from "@/components/one-action/RecordForm";
 import { ReportForm } from "@/components/one-action/ReportForm";
 import { StatusPill } from "@/components/one-action/StatusPill";
+import { Wording } from "@/components/one-action/Wording";
 import { checkIn, myActions } from "@/lib/api/client";
 import { meetingDay } from "@/lib/format";
 import { currentMember } from "@/lib/member";
@@ -25,19 +26,12 @@ export default async function MyActionsPage({
     (a) => a.meeting_id !== next.id && a.status !== "done",
   );
   const history = actions.filter((a) => a.meeting_id !== next.id);
-  const heldAt = (meetingId: string) =>
-    meetingId === update.since_meeting?.id
-      ? update.since_meeting.held_at
-      : update.actions.find((a) => a.committed_at.id === meetingId)
-          ?.committed_at.held_at;
-  const when = (meetingId: string, prefix = "") => {
-    const at = heldAt(meetingId);
-    return at ? `${prefix}${meetingDay(at, "short")}` : prefix.trim();
-  };
+  const when = (a: { created_at: string | null }, prefix = "") =>
+    a.created_at ? `${prefix}${meetingDay(a.created_at, "short")}` : "";
 
   return (
-    <div className="mx-4 grid grid-cols-1 gap-x-6 sm:mx-8 xl:grid-cols-[1fr_320px]">
-      <div className="flex flex-col gap-3">
+    <div className="mx-4 grid grid-cols-1 gap-6 sm:mx-8 xl:grid-cols-[1fr_320px]">
+      <div className="flex flex-col">
         <CircleTabs circleId={circleId} />
         <section className="surface flex flex-col gap-6 p-6">
           <div className="flex flex-wrap items-start justify-between gap-3">
@@ -60,10 +54,7 @@ export default async function MyActionsPage({
                   Committed for {meetingDay(next.held_at, "short")}. Report on
                   it whenever it lands.
                 </div>
-                <p className="type-body font-semibold">{forNext.text}</p>
-                {forNext.why && (
-                  <p className="type-body text-warm-500">{forNext.why}</p>
-                )}
+                <Wording action={forNext} />
                 <ReportForm action={forNext} />
               </div>
             ) : (
@@ -81,7 +72,7 @@ export default async function MyActionsPage({
                     className="rounded-lg border border-warm-300 p-4"
                   >
                     <div className="type-caption text-warm-500">
-                      {when(a.meeting_id, "Committed ")}
+                      {when(a, "Committed ")}
                     </div>
                     <p className="type-body font-semibold">{a.text}</p>
                     <ReportForm action={a} />
@@ -97,9 +88,7 @@ export default async function MyActionsPage({
               {history.map((a) => (
                 <li key={a.id} className="flex items-start gap-3 py-3">
                   <div className="min-w-0 flex-1">
-                    <div className="type-caption text-warm-500">
-                      {when(a.meeting_id)}
-                    </div>
+                    <div className="type-caption text-warm-500">{when(a)}</div>
                     <div className="type-body font-semibold">{a.text}</div>
                     {a.note && (
                       <div className="type-body text-warm-500">{a.note}</div>

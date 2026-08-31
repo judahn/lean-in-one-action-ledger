@@ -65,6 +65,12 @@ class PostgresActionRepository:
             "update actions set status = %s where id = %s", (update.status.value, action.id)
         )
 
+    def rewrite(self, action: Action) -> None:
+        self.conn.execute(
+            "update actions set text = %s, why = %s where id = %s",
+            (action.text, action.why, action.id),
+        )
+
     def list_for_member(self, member_id: UUID) -> list[Action]:
         rows = self.conn.execute(
             ACTION_SELECT + "where a.member_id = %s order by a.created_at desc", (member_id,)

@@ -12,6 +12,7 @@ from enum import StrEnum
 from uuid import UUID, uuid4
 
 from app.domain.errors import (
+    ActionAlreadyReported,
     DuplicateAction,
     InvalidStatusTransition,
     MeetingNotInCircle,
@@ -57,6 +58,13 @@ class Action:
     status: ActionStatus = ActionStatus.committed
     note: str | None = None
     created_at: datetime | None = None
+
+    def rewrite(self, text: str, why: str | None = None) -> None:
+        """Invariant 4: the wording is hers to change until she reports on it."""
+        if self.status is not ActionStatus.committed:
+            raise ActionAlreadyReported("a reported action keeps the wording the Circle heard")
+        self.text = text
+        self.why = why
 
     def report(self, status: ActionStatus, note: str | None = None) -> ActionUpdate:
         """Invariant 3: forward from committed, revisable among the rest."""

@@ -47,6 +47,7 @@ class CheckIn:
     next_meeting: Meeting
     since_meeting: MeetingRef | None
     actions: list[CheckInAction]
+    upcoming: list[CheckInAction]
     follow_through: FollowThrough
     opener: str
     opener_source: str = "template"
@@ -54,7 +55,10 @@ class CheckIn:
 
 class CheckInAssembler:
     def assemble(self, circle: Circle, next_meeting: Meeting, past: list[Meeting]) -> CheckIn:
-        """`past` is the window: the last N meetings, newest first, with their actions."""
+        """`past` is the window: the last N meetings, newest first.
+
+        Every meeting arrives with its actions, the next one included.
+        """
         since = past[0] if past else None
         listed = self._listed(circle, past)
         follow_through = self._follow_through(past)
@@ -64,6 +68,7 @@ class CheckInAssembler:
             next_meeting=next_meeting,
             since_meeting=MeetingRef(since.id, since.held_at) if since else None,
             actions=listed,
+            upcoming=self._upcoming(circle, next_meeting),
             follow_through=follow_through,
             opener=self._opener(follow_through, carried),
         )
@@ -138,6 +143,19 @@ class CheckInAssembler:
                 f" {carried} {'is' if carried == 1 else 'are'} carried over from earlier meetings."
             )
         return line
+
+    # Rule 4: the upcoming group is what the Circle commits to before it leaves,
+    # alphabetical like everything else. An entry can already carry a status,
+    # because a member may report before the meeting.
+
+    def _upcoming(self, circle: Circle, next_meeting: Meeting) -> list[CheckInAction]:
+        def name(action: Action) -> str:
+            return circle.members[action.member_id].display_name
+
+        return [
+            self._entry(circle, next_meeting, a, carried_over=False)
+            for a in sorted(next_meeting.actions, key=name)
+        ]
 
 
 def _count(n: int, noun: str) -> str:

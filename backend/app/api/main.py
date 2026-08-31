@@ -5,6 +5,7 @@ from fastapi.responses import JSONResponse
 
 from app.api.routers import actions, check_in
 from app.domain.errors import (
+    ActionAlreadyReported,
     DuplicateAction,
     InvalidStatusTransition,
     MeetingNotInCircle,
@@ -21,6 +22,7 @@ STATUS_FOR = {
     NotAMember: 403,
     Forbidden: 403,
     InvalidStatusTransition: 422,
+    ActionAlreadyReported: 422,
     MeetingNotInCircle: 404,
     NotFound: 404,
 }

@@ -3,9 +3,9 @@
 from datetime import datetime
 from uuid import UUID
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, model_validator
 
-from app.domain.check_in import CheckIn
+from app.domain.check_in import CheckIn, CheckInAction
 from app.domain.model import Action, ActionStatus
 
 
@@ -14,9 +14,19 @@ class RecordActionRequest(BaseModel):
     why: str | None = None
 
 
-class ReportActionRequest(BaseModel):
-    status: ActionStatus
+class UpdateActionRequest(BaseModel):
+    """One intent or the other: a status reports on the action, text rewords it."""
+
+    status: ActionStatus | None = None
     note: str | None = None
+    text: str | None = Field(default=None, min_length=1)
+    why: str | None = None
+
+    @model_validator(mode="after")
+    def one_intent(self) -> "UpdateActionRequest":
+        if (self.status is None) == (self.text is None):
+            raise ValueError("send a status to report on the action, or text to reword it")
+        return self
 
 
 class ActionResponse(BaseModel):
@@ -62,6 +72,17 @@ class CheckInActionOut(BaseModel):
     committed_at: MeetingRefOut
     carried_over: bool
 
+    @classmethod
+    def from_domain(cls, a: CheckInAction) -> "CheckInActionOut":
+        return cls(
+            member=MemberOut(**a.member.__dict__),
+            text=a.text,
+            status=a.status,
+            note=a.note,
+            committed_at=MeetingRefOut(**a.committed_at.__dict__),
+            carried_over=a.carried_over,
+        )
+
 
 class FollowThroughOut(BaseModel):
     window_meetings: int
@@ -78,6 +99,7 @@ class CheckInResponse(BaseModel):
     next_meeting: NextMeetingOut
     since_meeting: MeetingRefOut | None
     actions: list[CheckInActionOut]
+    upcoming: list[CheckInActionOut]
     follow_through: FollowThroughOut
     opener: str
     opener_source: str
@@ -93,17 +115,8 @@ class CheckInResponse(BaseModel):
                 moderator=MemberOut(**moderator.__dict__) if moderator else None,
             ),
             since_meeting=MeetingRefOut(**c.since_meeting.__dict__) if c.since_meeting else None,
-            actions=[
-                CheckInActionOut(
-                    member=MemberOut(**a.member.__dict__),
-                    text=a.text,
-                    status=a.status,
-                    note=a.note,
-                    committed_at=MeetingRefOut(**a.committed_at.__dict__),
-                    carried_over=a.carried_over,
-                )
-                for a in c.actions
-            ],
+            actions=[CheckInActionOut.from_domain(a) for a in c.actions],
+            upcoming=[CheckInActionOut.from_domain(a) for a in c.upcoming],
             follow_through=FollowThroughOut(**c.follow_through.__dict__),
             opener=c.opener,
             opener_source=c.opener_source,

@@ -58,3 +58,23 @@ export async function reportAction(
   revalidatePath("/", "layout");
   return { ok: true };
 }
+
+export async function rewriteAction(formData: FormData): Promise<FormState> {
+  const member = await currentMember();
+  const actionId = String(formData.get("action_id"));
+  const text = String(formData.get("text") ?? "").trim();
+  const why = String(formData.get("why") ?? "").trim() || null;
+  if (!text) return { error: "Say the one thing you'll do." };
+  try {
+    await api(`/actions/${actionId}`, member.id, {
+      method: "PATCH",
+      body: JSON.stringify({ text, why }),
+    });
+  } catch (e) {
+    return {
+      error: e instanceof ApiError ? e.message : "Something went wrong.",
+    };
+  }
+  revalidatePath("/", "layout");
+  return { ok: true };
+}

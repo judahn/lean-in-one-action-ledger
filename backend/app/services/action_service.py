@@ -38,6 +38,16 @@ class ActionService:
         self.actions.report(action, update)
         return action
 
+    def rewrite(self, action_id: UUID, member_id: UUID, text: str, why: str | None) -> Action:
+        action = self.actions.get(action_id)
+        if action is None:
+            raise NotFound("no such action")
+        if action.member_id != member_id:
+            raise Forbidden("only the action's own member may reword it")
+        action.rewrite(text, why)
+        self.actions.rewrite(action)
+        return action
+
     def history(self, member_id: UUID, asking_member_id: UUID) -> list[Action]:
         if member_id != asking_member_id:
             raise Forbidden("a member sees only her own history")

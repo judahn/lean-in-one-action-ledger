@@ -35,7 +35,9 @@ class PostgresMeetingRepository:
             MEETING_SELECT + "where circle_id = %s and held_at > %s order by held_at asc limit 1",
             (circle_id, after),
         ).fetchone()
-        return meeting_from_row(row) if row else None
+        if row is None:
+            return None
+        return self._with_actions([meeting_from_row(row)])[0]
 
     def recent_for(self, circle_id: UUID, before: datetime, limit: int) -> list[Meeting]:
         rows = self.conn.execute(

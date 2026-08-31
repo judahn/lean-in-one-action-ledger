@@ -3,6 +3,7 @@
 from uuid import uuid4
 
 from tests.conftest import (
+    ACTION_PRIYA_AUG,
     ACTION_YUKI_AUG,
     CIRCLE,
     LENA,
@@ -90,6 +91,30 @@ def test_a_report_back_to_committed_is_refused(client):
     assert response.status_code == 422
 
 
+def test_a_member_rewords_her_own_action_until_she_reports(client):
+    response = client.patch(
+        f"/actions/{ACTION_YUKI_AUG}",
+        json={"text": "Re-raise the title change with Elena", "why": "She owns the ladder"},
+        headers=as_member(YUKI),
+    )
+
+    assert response.status_code == 200
+    body = response.json()
+    assert body["text"] == "Re-raise the title change with Elena"
+    assert body["why"] == "She owns the ladder"
+    assert body["status"] == "committed"
+
+
+def test_a_reported_action_keeps_the_wording_the_circle_heard(client):
+    response = client.patch(
+        f"/actions/{ACTION_PRIYA_AUG}",
+        json={"text": "Something easier", "why": None},
+        headers=as_member(PRIYA),
+    )
+
+    assert response.status_code == 422
+
+
 # GET /members/{member_id}/actions
 
 
@@ -130,6 +155,7 @@ def test_the_check_in_has_the_example_shape(client):
         "next_meeting",
         "since_meeting",
         "actions",
+        "upcoming",
         "follow_through",
         "opener",
         "opener_source",
@@ -147,6 +173,16 @@ def test_the_check_in_has_the_example_shape(client):
     }
     carried = [a["member"]["display_name"] for a in body["actions"] if a["carried_over"]]
     assert carried == ["Yuki", "Lena"]
+    assert set(body["upcoming"][0]) == {
+        "member",
+        "text",
+        "status",
+        "note",
+        "committed_at",
+        "carried_over",
+    }
+    assert [a["member"]["display_name"] for a in body["upcoming"]] == ["Grace", "Yuki"]
+    assert body["upcoming"][0]["committed_at"]["id"] == body["next_meeting"]["id"]
     assert body["follow_through"] == {
         "window_meetings": 3,
         "committed": 24,

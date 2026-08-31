@@ -1,4 +1,4 @@
-"""The three aggregate rules from the spec. No database."""
+"""The aggregate rules from the spec. No database."""
 
 from datetime import datetime, timezone
 from uuid import uuid4
@@ -6,6 +6,7 @@ from uuid import uuid4
 import pytest
 
 from app.domain.errors import (
+    ActionAlreadyReported,
     DuplicateAction,
     InvalidStatusTransition,
     MeetingNotInCircle,
@@ -93,3 +94,27 @@ def test_an_action_never_returns_to_committed():
 
     with pytest.raises(InvalidStatusTransition):
         action.report(ActionStatus.committed)
+
+
+# Invariant 4: a report freezes the wording
+
+
+def test_the_wording_changes_while_the_action_is_still_committed():
+    priya = Member(id=uuid4(), display_name="Priya")
+    circle = circle_with(priya)
+    action = circle.record_action(meeting_of(circle), priya.id, "Ask Marcus")
+
+    action.rewrite("Ask Marcus for the Q4 launch to lead", why="It is the job I want")
+
+    assert action.text == "Ask Marcus for the Q4 launch to lead"
+    assert action.why == "It is the job I want"
+
+
+def test_a_reported_action_keeps_the_wording_the_circle_heard():
+    priya = Member(id=uuid4(), display_name="Priya")
+    circle = circle_with(priya)
+    action = circle.record_action(meeting_of(circle), priya.id, "Ask Marcus")
+    action.report(ActionStatus.not_yet)
+
+    with pytest.raises(ActionAlreadyReported):
+        action.rewrite("Something easier")

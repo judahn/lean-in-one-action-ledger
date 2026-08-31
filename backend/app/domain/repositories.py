@@ -21,7 +21,7 @@ class MeetingRepository(Protocol):
         ...
 
     def next_for(self, circle_id: UUID, after: datetime) -> Meeting | None:
-        """The first meeting of the Circle held after the given moment."""
+        """The first meeting of the Circle held after the given moment, with its actions."""
         ...
 
     def recent_for(self, circle_id: UUID, before: datetime, limit: int) -> list[Meeting]:
@@ -38,6 +38,10 @@ class ActionRepository(Protocol):
 
     def report(self, action: Action, update: ActionUpdate) -> None:
         """Append the update and set the action's current status."""
+        ...
+
+    def rewrite(self, action: Action) -> None:
+        """Save the action's new wording."""
         ...
 
     def list_for_member(self, member_id: UUID) -> list[Action]:

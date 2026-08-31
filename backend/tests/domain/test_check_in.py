@@ -162,3 +162,46 @@ def test_the_opener_for_an_empty_ledger(circle, next_meeting):
     check_in = CheckInAssembler().assemble(circle, next_meeting, [])
 
     assert check_in.opener == "No One Actions on the ledger yet."
+
+
+# Rule 4: what the Circle commits to before it leaves
+
+
+def test_the_upcoming_group_reads_alphabetically_by_member(circle, past):
+    september = meeting(circle, at(9, 10), {"Yuki": C, "Grace": C, "Dana": C})
+
+    check_in = CheckInAssembler().assemble(circle, september, past)
+
+    assert [a.member.display_name for a in check_in.upcoming] == ["Dana", "Grace", "Yuki"]
+
+
+def test_an_upcoming_entry_carries_the_status_of_an_early_report(circle, past):
+    september = meeting(circle, at(9, 10), {"Grace": D})
+
+    check_in = CheckInAssembler().assemble(circle, september, past)
+
+    assert [a.status for a in check_in.upcoming] == [D]
+
+
+def test_an_upcoming_entry_points_at_the_meeting_it_is_for(circle, past):
+    september = meeting(circle, at(9, 10), {"Grace": C})
+
+    check_in = CheckInAssembler().assemble(circle, september, past)
+
+    assert check_in.upcoming[0].committed_at.id == september.id
+    assert check_in.upcoming[0].carried_over is False
+
+
+def test_the_upcoming_group_is_empty_until_someone_commits(circle, next_meeting, past):
+    check_in = CheckInAssembler().assemble(circle, next_meeting, past)
+
+    assert check_in.upcoming == []
+
+
+def test_upcoming_actions_stay_out_of_the_reporting_list_and_the_rate(circle, past):
+    september = meeting(circle, at(9, 10), {"Grace": C, "Yuki": C})
+
+    check_in = CheckInAssembler().assemble(circle, september, past)
+
+    assert all(a.committed_at.held_at < at(9, 10) for a in check_in.actions)
+    assert check_in.follow_through.committed == 15

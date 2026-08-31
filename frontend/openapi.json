@@ -83,8 +83,9 @@
         "tags": [
           "actions"
         ],
-        "summary": "Report Action",
-        "operationId": "report_action_actions__action_id__patch",
+        "summary": "Update Action",
+        "description": "A status reports on the action. Text rewords it, until the first report.",
+        "operationId": "update_action_actions__action_id__patch",
         "parameters": [
           {
             "name": "action_id",
@@ -112,7 +113,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ReportActionRequest"
+                "$ref": "#/components/schemas/UpdateActionRequest"
               }
             }
           }
@@ -439,6 +440,13 @@
             "type": "array",
             "title": "Actions"
           },
+          "upcoming": {
+            "items": {
+              "$ref": "#/components/schemas/CheckInActionOut"
+            },
+            "type": "array",
+            "title": "Upcoming"
+          },
           "follow_through": {
             "$ref": "#/components/schemas/FollowThroughOut"
           },
@@ -457,6 +465,7 @@
           "next_meeting",
           "since_meeting",
           "actions",
+          "upcoming",
           "follow_through",
           "opener",
           "opener_source"
@@ -640,10 +649,17 @@
         ],
         "title": "RecordActionRequest"
       },
-      "ReportActionRequest": {
+      "UpdateActionRequest": {
         "properties": {
           "status": {
-            "$ref": "#/components/schemas/ActionStatus"
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ActionStatus"
+              },
+              {
+                "type": "null"
+              }
+            ]
           },
           "note": {
             "anyOf": [
@@ -655,13 +671,34 @@
               }
             ],
             "title": "Note"
+          },
+          "text": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Text"
+          },
+          "why": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Why"
           }
         },
         "type": "object",
-        "required": [
-          "status"
-        ],
-        "title": "ReportActionRequest"
+        "title": "UpdateActionRequest",
+        "description": "One intent or the other: a status reports on the action, text rewords it."
       },
       "ValidationError": {
         "properties": {
