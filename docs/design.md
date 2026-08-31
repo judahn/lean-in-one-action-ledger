@@ -52,8 +52,8 @@ the one contract.
 
 ## What it refuses to do
 
-This is the design judgment, and I wrote it into the spec as requirements
-rather than leaving it to taste.
+This is the design judgment, and it's in the spec as requirements rather
+than left to taste.
 
 - No per-member rates, streaks, or rankings exist anywhere. The only rate is
   the Circle's.
@@ -64,9 +64,7 @@ rather than leaving it to taste.
 - The counts come first and the rate is small. A Circle is not a scoreboard.
 - A month with nothing committed has no rate, rather than a zero that reads as
   a bad month.
-- The opener states the numbers and stops. Warmth is the moderator's. Behind a
-  flag, Claude can write the line from the same facts the room hears, and the
-  response says which one you got.
+- The opener states the numbers and stops. Warmth is the moderator's.
 - A member sees her own history and nobody else's. Nothing crosses Circles.
 
 ## Tradeoffs I made on purpose
@@ -113,14 +111,15 @@ tens of rows, not millions.
 - **Integrity.** A trigger or generated column enforces `actions.circle_id`.
   Row-level security policies replace the header once there's real identity
   (Supabase Auth or equivalent), with the moderator as a role on the meeting.
-- **The opener.** With the flag on, the nightly job sends each upcoming
-  Circle's facts through the Batches API rather than calling at request time.
-  Per-Circle opt-in. The facts sent are only what the Update already shows.
 - **Ops.** `schema.sql` stays the source of truth and every migration updates
   it. Structured logs on the service layer, an alert on assembler latency.
 
 ## What I'd do next
 
+- An opt-in AI opener. Claude writes the moderator's line from the same
+  facts the Update already shows, nightly through the Batches API for
+  Circles with a meeting coming up. Designed and cut from round one, so the
+  demo needs no key.
 - **Pulse**: attendance, follow-through, and a post-meeting energy check, read
   as a Circle health snapshot with one nudge linking to the matching leader
   resource. Same schema, one more endpoint.
@@ -131,9 +130,3 @@ tens of rows, not millions.
   the seed.
 - Multi-Circle members and Networks are already representable, and untested.
 
-## Time
-
-The spec and the backend fit the 2 to 3 hour box. The screens were an
-afternoon on top, because the round-one note asked for a couple of screens
-that look great and actually function, and the document asked for a backend.
-I built both and I'm saying so here.

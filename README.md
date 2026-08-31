@@ -83,14 +83,8 @@ All optional. Defaults work for the local setup above.
 |---|---|---|---|
 | `DATABASE_URL` | backend | `postgresql://ledger:ledger@localhost:5433/ledger` | the API's database |
 | `TEST_DATABASE_URL` | backend | `...:5433/ledger_test` | rebuilt by the test suite |
-| `OPENER_AI` | backend | `0` | `1` sends the Update's facts to Claude for the opener line |
-| `ANTHROPIC_API_KEY` | backend | | needed when `OPENER_AI=1` |
-| `OPENER_MODEL` | backend | `claude-opus-5` | the model behind the flag |
 | `API_URL` | frontend | `http://localhost:8000` | where the screens fetch from |
 
-With `OPENER_AI` off the opener is a template that states the numbers. With it
-on, Claude writes the line from the same facts the room hears, and the response
-says `"opener_source": "claude"`. If Claude is unreachable, the template stands.
 
 ## Working on it
 

@@ -1,10 +1,11 @@
 # How this was built
 
-Spec first, in my words: the feature, the domain model, the invariants,
-the privacy rules, what's out of scope. Claude Code built against that
-spec, tests first. I read every file as it landed, ran the suite, and
-paired on `CheckInAssembler` one rule at a time. `design.md` and this file
-are mine.
+Collaborating with Claude Code end to end: the spec, the code, the tests,
+the screens, and these docs. My part was direction and review. I chose the
+feature, the domain model, the invariants, the privacy rules, and what got
+cut, read everything as it landed, ran the suite, and paired on
+`CheckInAssembler` one rule at a time. Claude Code wrote against those
+decisions, tests first.
 
 ## Choosing the feature
 
@@ -47,9 +48,10 @@ builds on the same schema and is in `design.md` as what I'd do next.
   minutes.
 - Identity out of scope: an `X-Member-Id` header, membership checked in
   the service, and a note in `design.md` on how real auth replaces it.
-- AI in the product only where it's optional and visible: the moderator's
-  opener, behind a flag, prompt in the repo, `opener_source` in the
-  response.
+- AI stays out of the product for round one. An opener written by Claude
+  from the same facts the room hears was designed, built behind a flag, and
+  cut before sending: the demo doesn't need the dependency or a key, and
+  it's better as a next step I can speak to than a flag left untested.
 - Privacy as requirements, not vibes: no per-member rates, no rankings.
 - TDD, scoped to what would break if changed: the invariants, the
   assembler, the schema constraints, one test per endpoint. Tests drive the
@@ -71,18 +73,14 @@ builds on the same schema and is in `design.md` as what I'd do next.
 
 ## Where AI was used
 
-Everything in `backend/`, `frontend/`, and `db/` was generated with Claude
-Code (Claude Fable 5) from `docs/spec.md`, then read, run, and edited by me.
-The research reading above was Claude Code fetching pages and articles into
-notes. The design tokens came from Claude Code reading Connect's stylesheet
-out of a page I saved while signed in. The prose in `docs/` is mine.
+Everywhere. The spec was drafted together from my decisions, and everything
+in `backend/`, `frontend/`, and `db/` was generated with Claude Code
+(Claude Fable 5) against it, then read, run, and edited by me. The research
+reading above was Claude Code fetching pages and articles into notes. The
+design tokens came from Claude Code reading Connect's stylesheet out of a
+page I saved while signed in. These docs were drafted the same way, and the
+decisions in them are mine.
 
-## Time
-
-The spec and the backend fit the 2 to 3 hour box. The screens were an
-afternoon on top, because the round-one note asked for a couple of screens
-that look great and actually function, and the document asked for a backend.
-I built both.
 
 ## Tools
 

@@ -1,4 +1,4 @@
-export function Opener({ line, source }: { line: string; source: string }) {
+export function Opener({ line }: { line: string }) {
   return (
     <blockquote className="rounded-lg bg-tint-poppy p-4">
       <div className="type-overline text-burgundy">Opener</div>
@@ -6,9 +6,7 @@ export function Opener({ line, source }: { line: string; source: string }) {
         {line}
       </p>
       <div className="type-caption mt-2 text-warm-500">
-        {source === "claude"
-          ? "Written by Claude from the ledger."
-          : "Read it, or say it your way."}
+        Read it, or say it your way.
       </div>
     </blockquote>
   );

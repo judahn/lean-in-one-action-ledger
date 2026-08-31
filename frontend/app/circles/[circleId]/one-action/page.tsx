@@ -46,7 +46,7 @@ export default async function OneActionUpdatePage({
             <SubNav circleId={circleId} active="update" />
           </div>
           <FollowThrough ft={update.follow_through} />
-          <Opener line={update.opener} source={update.opener_source} />
+          <Opener line={update.opener} />
           <UpdateList
             actions={update.actions}
             sinceHeldAt={update.since_meeting?.held_at ?? null}

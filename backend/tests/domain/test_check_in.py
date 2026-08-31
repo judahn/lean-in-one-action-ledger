@@ -149,7 +149,6 @@ def test_the_opener_states_the_numbers(circle, next_meeting, past):
     assert check_in.opener == (
         "8 of 15 actions landed over the last 3 meetings. 3 are carried over from earlier meetings."
     )
-    assert check_in.opener_source == "template"
 
 
 def test_the_opener_skips_carry_over_when_there_is_none(circle, next_meeting, past):

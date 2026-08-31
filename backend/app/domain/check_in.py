@@ -50,7 +50,6 @@ class CheckIn:
     upcoming: list[CheckInAction]
     follow_through: FollowThrough
     opener: str
-    opener_source: str = "template"
 
 
 class CheckInAssembler:

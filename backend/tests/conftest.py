@@ -18,7 +18,6 @@ TEST_DB = TEST_URL.rsplit("/", 1)[1]
 # The app reads DATABASE_URL at request time, so point it at the test database
 # before anything imports the app.
 os.environ["DATABASE_URL"] = TEST_URL
-os.environ["OPENER_AI"] = "0"
 
 # Ids from db/seed.sql
 CIRCLE = UUID("c0000000-0000-4000-8000-000000000001")

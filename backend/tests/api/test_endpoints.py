@@ -158,7 +158,6 @@ def test_the_check_in_has_the_example_shape(client):
         "upcoming",
         "follow_through",
         "opener",
-        "opener_source",
     }
     assert body["circle"]["name"] == "West Coast Execs"
     assert body["next_meeting"]["moderator"]["display_name"] == "Dana"
@@ -192,7 +191,6 @@ def test_the_check_in_has_the_example_shape(client):
         "open": 2,
         "rate": 0.71,
     }
-    assert body["opener_source"] == "template"
 
 
 def test_a_non_member_cannot_read_the_check_in(client):

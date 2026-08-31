@@ -35,7 +35,7 @@ framework imports.
   `CheckInAssembler` (unit), the schema constraints that back the
   invariants (against the Docker Postgres), and one test per endpoint, with
   the check-in endpoint asserting the example shape. Not tested: framework
-  wiring, serialization, seed content, the AI opener (flag off in tests).
+  wiring, serialization, seed content.
 - A test is named for the rule it protects, checks one behavior, and drives
   the public surface (a service or domain method), never a private helper.
   Mock only at I/O (repositories, the LLM), never the domain. A bug found

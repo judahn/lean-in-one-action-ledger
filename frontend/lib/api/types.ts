@@ -143,8 +143,6 @@ export interface components {
             follow_through: components["schemas"]["FollowThroughOut"];
             /** Opener */
             opener: string;
-            /** Opener Source */
-            opener_source: string;
         };
         /** CircleOut */
         CircleOut: {

@@ -102,7 +102,6 @@ class CheckInResponse(BaseModel):
     upcoming: list[CheckInActionOut]
     follow_through: FollowThroughOut
     opener: str
-    opener_source: str
 
     @classmethod
     def from_domain(cls, c: CheckIn) -> "CheckInResponse":
@@ -119,5 +118,4 @@ class CheckInResponse(BaseModel):
             upcoming=[CheckInActionOut.from_domain(a) for a in c.upcoming],
             follow_through=FollowThroughOut(**c.follow_through.__dict__),
             opener=c.opener,
-            opener_source=c.opener_source,
         )

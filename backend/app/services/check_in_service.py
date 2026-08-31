@@ -7,7 +7,6 @@ from uuid import UUID
 from app.domain.check_in import CheckIn, CheckInAssembler
 from app.domain.repositories import CircleRepository, MeetingRepository
 from app.services.errors import Forbidden, NotFound
-from app.services.opener import ClaudeOpener
 
 
 @dataclass
@@ -15,7 +14,6 @@ class CheckInService:
     circles: CircleRepository
     meetings: MeetingRepository
     assembler: CheckInAssembler = field(default_factory=CheckInAssembler)
-    opener: ClaudeOpener | None = None
 
     def assemble(
         self, circle_id: UUID, asking_member_id: UUID, window: int, as_of: datetime
@@ -29,5 +27,4 @@ class CheckInService:
         if next_meeting is None:
             raise NotFound("no upcoming meeting is scheduled for this Circle")
         past = self.meetings.recent_for(circle_id, before=as_of, limit=window)
-        check_in = self.assembler.assemble(circle, next_meeting, past)
-        return self.opener.rewrite(check_in) if self.opener else check_in
+        return self.assembler.assemble(circle, next_meeting, past)

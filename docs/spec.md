@@ -65,7 +65,7 @@ Folder shape:
 backend/
   app/
     domain/         entities, value objects, CheckInAssembler, repository interfaces
-    services/       ActionService, CheckInService, opener_prompt.md
+    services/       ActionService, CheckInService
     infrastructure/ postgres repositories, db connection
     api/            FastAPI app and routers
   tests/
@@ -200,8 +200,7 @@ Example response:
     "open": 2,
     "rate": 0.71
   },
-  "opener": "15 of 24 actions landed over the last 3 meetings. 2 are carried over from earlier meetings.",
-  "opener_source": "template"
+  "opener": "15 of 24 actions landed over the last 3 meetings. 2 are carried over from earlier meetings."
 }
 ```
 
@@ -218,14 +217,11 @@ argument.
 rounded to two places. `partly` counts as half on purpose: the ritual
 rewards movement, not perfection. Documented, easy to change.
 
-**Opener:** a deterministic template by default that states the numbers
-and stops: "15 of 24 actions landed over the last 3 meetings. 2 are carried
-over from earlier meetings." Behind `OPENER_AI=1`, the same facts go to
-Claude with a short prompt (`app/services/opener_prompt.md`) and the
-returned line replaces the template. If Claude is unreachable or declines,
-the template stands. The response includes
-`"opener_source": "template" | "claude"`. This is the only place AI touches
-the product, and it's optional.
+**Opener:** a deterministic template that states the numbers and stops:
+"15 of 24 actions landed over the last 3 meetings. 2 are carried over from
+earlier meetings." An AI-written line (Claude drafting the opener from the
+same facts) was designed, and cut from round one. It lives in the design
+doc's next list.
 
 ## Tests (TDD, scoped to what would break if changed)
 
@@ -234,14 +230,12 @@ protects, for the things a later change could silently break:
 
 - The invariants, as unit tests on the aggregate with no database.
 - `CheckInAssembler`, as unit tests built from the example response above:
-  ordering, carry-over, the upcoming group, the rate, the template opener
-  and `opener_source`.
+  ordering, carry-over, the upcoming group, the rate, the template opener.
 - The schema constraints that back rules 1 and 3, one integration test
   each, so the database still refuses what the aggregate refuses.
 - One test per endpoint. The check-in endpoint asserts the example shape.
 
-Not tested: FastAPI wiring, Pydantic serialization, seed content, the AI
-opener (the flag stays off in tests). Each test is named for the rule it
+Not tested: FastAPI wiring, Pydantic serialization, seed content. Each test is named for the rule it
 protects and checks one behavior, so a failure reads as a sentence.
 
 ## Privacy rules (the design judgment, stated as requirements)

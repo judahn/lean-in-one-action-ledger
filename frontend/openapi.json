@@ -453,10 +453,6 @@
           "opener": {
             "type": "string",
             "title": "Opener"
-          },
-          "opener_source": {
-            "type": "string",
-            "title": "Opener Source"
           }
         },
         "type": "object",
@@ -467,8 +463,7 @@
           "actions",
           "upcoming",
           "follow_through",
-          "opener",
-          "opener_source"
+          "opener"
         ],
         "title": "CheckInResponse"
       },
