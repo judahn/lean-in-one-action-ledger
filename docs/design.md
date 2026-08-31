@@ -20,23 +20,27 @@ The ritual has a write moment and a read moment, so the feature has two
 screens, built as a One Action tab inside a Circle in Lean In Connect.
 
 **My actions** is the write side and it's private: record your One Action,
-mark the open one done or not with a line about it, see your own history.
+reword it until your first report, mark it done or not with a line about it,
+see your own history.
 
 **The Circle update** is the read side and it's shared: what's still open from
-earlier meetings, then this meeting's actions, the counts over the last three
-meetings, and a one-line opener the moderator can read or ignore. Every member
-sees the same page, because the room hears it read aloud anyway.
+earlier meetings, then this meeting's actions, what's already committed for
+the next one, the counts over the last three meetings, and a one-line opener
+the moderator can read or ignore. Every member sees the same page, because the
+room hears it read aloud anyway.
 
 ## The model
 
 One bounded context, Circle Commitments. `Circle` is the aggregate root and
-owns its `Meetings`. `Meeting` owns its `Actions`. Three invariants are
-enforced in the aggregate and backed by the schema:
+owns its `Meetings`. `Meeting` owns its `Actions`. Four invariants are
+enforced in the aggregate, two of them backed by the schema:
 
 1. One action per member per meeting.
 2. An action's member belongs to the action's Circle.
 3. Status only moves forward from `committed`. A later report can revise among
    done, partly, and not yet, never back.
+4. A report freezes the wording. Text and why change only while the action is
+   still `committed`, so what the Circle heard stays what the Circle heard.
 
 `CheckInAssembler` is a pure domain service: given a Circle, its next meeting,
 and its last N meetings with their actions, it produces the Update. No I/O, so
@@ -81,9 +85,11 @@ than left to taste.
   one horizon (three meetings by default), so the moderator's list stays
   bounded. The partial index on open actions is there for the version that
   carries forever, if a Circle wants it.
-- **The Update reads the previous meeting's commitments.** An action recorded
-  for the upcoming meeting shows in your own rail with a note on when it reads
-  out. The wall never shows a Circle promises nobody has made out loud yet.
+- **The Update is the meeting surface.** It reads out the previous meeting's
+  commitments, and it gathers the next one's: an upcoming group shows what the
+  Circle has committed to before it leaves, alphabetical like everything else
+  and outside the rate. Your own entry also sits in your rail, reportable and
+  rewordable right away.
 - **Identity is a header.** `X-Member-Id` says who is asking and the service
   checks membership. The member switcher in the top bar sets it. Real auth
   replaces both without touching the domain.
@@ -123,8 +129,6 @@ tens of rows, not millions.
 - **Pulse**: attendance, follow-through, and a post-meeting energy check, read
   as a Circle health snapshot with one nudge linking to the matching leader
   resource. Same schema, one more endpoint.
-- Rewording a commitment before you've reported on it. A report freezes the
-  wording. One more invariant, one more test.
 - Nudges between meetings, on email, since that's where Circles already live.
 - A per-Circle timezone, and a Circle endpoint so the front-end stops reading
   the seed.

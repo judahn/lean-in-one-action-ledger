@@ -25,7 +25,7 @@ deleting a Circle takes its meetings and actions with it.
 
 ## Where the invariants live
 
-The domain enforces the three rules from the spec. The schema backs two of
+The domain enforces the four rules from the spec. The schema backs two of
 them so a write that bypasses the domain still can't break them.
 
 1. **One action per member per meeting**: `unique (meeting_id, member_id)`
@@ -35,6 +35,10 @@ them so a write that bypasses the domain still can't break them.
    a trigger. See "At scale."
 3. **Status never returns to committed**: `check (status <> 'committed')` on
    `action_updates`. A report is always forward.
+4. **A report freezes the wording**: enforced in the aggregate. Text and why
+   change only while the action is still `committed`. Only the application
+   knows a reword from a report, so at scale a trigger closes this one
+   alongside rule 2.
 
 Both backed rules have a test that inserts past the domain and expects the
 database to refuse.

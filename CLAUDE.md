@@ -24,7 +24,8 @@ framework imports.
 
 - Invariants from the spec are enforced in the aggregate and backed by
   constraints in the schema: one action per member per meeting, member
-  belongs to the Circle, status only moves forward from `committed`.
+  belongs to the Circle, status only moves forward from `committed`, and a
+  report freezes the wording.
 - Privacy rules in the spec are requirements. No endpoint exposes
   per-member rates or rankings.
 - `CheckInAssembler` is built one rule at a time, paired: state the rule,

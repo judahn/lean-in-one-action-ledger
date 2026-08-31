@@ -53,9 +53,9 @@ enforced in the application only.
 last N meetings, produces a `CheckIn`. No I/O. Unit-tested on its own.
 **Built pairing with Judah, rule by rule. The piece he explains in the
 interview.**
-**Services:** `ActionService` (record, update, list for a member) and
-`CheckInService` (loads the Circle's recent meetings, runs the assembler,
-adds the opener). Thin, transactional, no domain logic. No use-case layer.
+**Services:** `ActionService` (record, report, reword, list for a member)
+and `CheckInService` (loads the Circle's recent meetings and its next one,
+runs the assembler). Thin, transactional, no domain logic. No use-case layer.
 **Infrastructure:** repository interfaces live in the domain, psycopg
 implementations sit against Postgres, and FastAPI routers map HTTP to services.
 

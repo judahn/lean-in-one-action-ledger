@@ -53,14 +53,14 @@ Open http://localhost:3000. It lands on the Circle's One Action tab.
 You start as Priya. The **Circle update** is what the moderator reads to open
 the September 10 meeting: what's still open from earlier meetings, then
 August's actions alphabetically (sort by status is the moderator's switch),
-the counts, and a one-line opener.
+what's already committed for September, the counts, and a one-line opener.
 
 - Click the avatar top right and pick **Yuki**. Her June action is still
   open. Under **My actions**, mark it done with a line about it, then go back
   to the Circle update and find it.
 - As anyone, record your One Action for September 10 under **My actions**.
-  It shows in your rail on the Circle update with a note on when it reads
-  out (October, since the Update reads the previous meeting's commitments).
+  It appears on the Circle update in the upcoming group and in your rail,
+  and you can reword it until your first report.
 - Pick **Dana** to see the leader tag. She moderates September's meeting.
 
 The switcher is a cookie that becomes the `X-Member-Id` header. Identity is

@@ -57,16 +57,19 @@ builds on the same schema and is in `design.md` as what I'd do next.
   assembler, the schema constraints, one test per endpoint. Tests drive the
   public surface and mock only at I/O.
 - Modules split at about 200 lines, by responsibility.
-- uv for the environment, my first project on it. Two commands for the
-  reviewer, and I wanted the practice.
+- uv for the environment, two commands for the reviewer.
 - The Update lists this meeting's actions alphabetically, with grouping by
   status as a switch on the page. I had first specified "done first." That
   was the tool ranking people, and I took it out.
 - Counts first, the rate small, and no rate at all when nothing was
   committed. A Circle is not a scoreboard.
-- An action recorded for the upcoming meeting is reportable right away and
-  shows in your own rail, with a line on when it reads out. The wall reads
-  the previous meeting's commitments only.
+- The Update is the meeting surface. It reads out the previous meeting's
+  commitments and gathers the next one's in an upcoming group, alphabetical
+  and outside the rate. An action recorded for the upcoming meeting is
+  reportable right away.
+- A report freezes the wording, the fourth invariant. Text changes only
+  while an action is still committed, so what the Circle heard stays what
+  the Circle heard. Rewording lives in My actions until the first report.
 - The screens use Connect's own tokens, read from a saved page of the
   platform: palette, type scale, radii, motion. They're built as a tab inside
   a Circle, with Connect's chrome as a static frame.
@@ -80,7 +83,6 @@ reading above was Claude Code fetching pages and articles into notes. The
 design tokens came from Claude Code reading Connect's stylesheet out of a
 page I saved while signed in. These docs were drafted the same way, and the
 decisions in them are mine.
-
 
 ## Tools
 
